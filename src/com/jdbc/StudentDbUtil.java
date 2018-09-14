@@ -1,5 +1,6 @@
 package com.jdbc;
-import java.sql.Connection;
+import java.io.PrintWriter;
+import java.sql.*;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.sql.DataSource;
+
+import com.mysql.jdbc.PreparedStatement;
 
 public class StudentDbUtil {
 	private Connection conn;
@@ -22,7 +25,6 @@ public class StudentDbUtil {
 		Statement stmt = null;
 		ResultSet rs = null;
 		try {
-			
 			sql = "SELECT * FROM student ORDER BY first_name";
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
@@ -56,5 +58,28 @@ public class StudentDbUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public int addStudent(Student student, PrintWriter out) {
+		PreparedStatement prdstmt = null;
+		String sql = null;
+		ResultSet rs = null;
+		int i = 0;
+		try {
+			sql = "INSERT INTO student (first_name,last_name,email) values (?, ? ,?)";
+			prdstmt = (PreparedStatement) conn.prepareStatement(sql);
+			prdstmt.setString(1, student.getFirstName());
+			prdstmt.setString(2, student.getLastName());
+			prdstmt.setString(3, student.getEmail());
+			i = prdstmt.executeUpdate(); 
+		}catch(Exception e) {
+			out.print(e);
+		}
+		return i;
+	}
+
+	public void updateStudent(Student student) {
+		// TODO Auto-generated method stub
+		
 	}
 }

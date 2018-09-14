@@ -40,10 +40,43 @@ public class StudentController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		if(request.getParameter("id") != null) {
+			try {
+				this.addStudent(request,response);
+			} catch (ClassNotFoundException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else {
+			this.updateStudent(request,response);
+		}
 	}
 	
+	private void updateStudent(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		Student student = null;
+		StudentDbUtil studentDb = null;
+		int id = Integer.parseInt(request.getParameter("id"));
+		String firstName = request.getParameter("fname");
+		String lastName = request.getParameter("lname");
+		String email = request.getParameter("email");
+		student = new Student(id,firstName, lastName, email);
+		studentDb.updateStudent(student);
+		this.StudentList(request, response);
+	}
+
+	private void addStudent(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ClassNotFoundException, SQLException {
+		Student student = null;
+		StudentDbUtil studentDb = new StudentDbUtil();
+		
+		String firstName = request.getParameter("fname");
+		String lastName = request.getParameter("lname");
+		String email = request.getParameter("email");
+		student = new Student(firstName, lastName, email);
+		PrintWriter out = response.getWriter();
+		int row = studentDb.addStudent(student,out);
+		this.doGet(request, response);
+	}
+
 	public void StudentList(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		PrintWriter out = response.getWriter();
 		try {
