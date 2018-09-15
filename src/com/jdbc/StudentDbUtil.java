@@ -82,4 +82,24 @@ public class StudentDbUtil {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public Student setStudent(int id) {
+		String sql = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		Student student = null;
+		try {
+			sql = "SELECT * FROM student WHERE id = 2";
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			String first_name = rs.getString("first_name");
+			String last_name = rs.getString("last_name");
+			String email = rs.getString("email");
+			student = new Student(id, first_name, last_name, email);
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return student;
+	}
 }

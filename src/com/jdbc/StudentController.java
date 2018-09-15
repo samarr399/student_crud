@@ -1,6 +1,5 @@
 package com.jdbc;
 
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -19,39 +18,60 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/StudentController")
 public class StudentController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public StudentController() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		this.StudentList(request, response);
+	public StudentController() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if(request.getParameter("id") != null) {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		if ((request.getParameter("id") != null) && request.getParameter("command").equals("update")) {
 			try {
-				this.addStudent(request,response);
+				this.showUpdateForm(request, response);
 			} catch (ClassNotFoundException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}else {
-			this.updateStudent(request,response);
+		} else if ((request.getParameter("id") != null) && request.getParameter("command").equals("delete")) {
+
+		} else {
+			this.StudentList(request, response);
 		}
 	}
-	
+
+	private void showUpdateForm(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, SQLException, IOException {
+			StudentDbUtil sudentDb = new StudentDbUtil();
+			int id = Integer.parseInt(request.getParameter("id"));
+			Student student = sudentDb.setStudent(id);
+//			response.getWriter().println(student);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		if (request.getParameter("id") != null) {
+			try {
+				this.addStudent(request, response);
+			} catch (ClassNotFoundException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			this.updateStudent(request, response);
+		}
+	}
+
 	private void updateStudent(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		Student student = null;
 		StudentDbUtil studentDb = null;
@@ -59,21 +79,22 @@ public class StudentController extends HttpServlet {
 		String firstName = request.getParameter("fname");
 		String lastName = request.getParameter("lname");
 		String email = request.getParameter("email");
-		student = new Student(id,firstName, lastName, email);
+		student = new Student(id, firstName, lastName, email);
 		studentDb.updateStudent(student);
 		this.StudentList(request, response);
 	}
 
-	private void addStudent(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ClassNotFoundException, SQLException {
+	private void addStudent(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException, ClassNotFoundException, SQLException {
 		Student student = null;
 		StudentDbUtil studentDb = new StudentDbUtil();
-		
+
 		String firstName = request.getParameter("fname");
 		String lastName = request.getParameter("lname");
 		String email = request.getParameter("email");
 		student = new Student(firstName, lastName, email);
 		PrintWriter out = response.getWriter();
-		int row = studentDb.addStudent(student,out);
+		int row = studentDb.addStudent(student, out);
 		this.doGet(request, response);
 	}
 

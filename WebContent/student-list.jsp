@@ -12,14 +12,20 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link
+	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet"
+	integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+	crossorigin="anonymous">
 </head>
 <body>
 
 	<div class="container">
 		<h2>Student List</h2>
-		
-		<a href="add-student.jsp" class="btn btn-success pull-right">Add Student</a>
-		<br><br>
+
+		<a href="add-student.jsp" class="btn btn-success pull-right">Add
+			Student</a> <br>
+		<br>
 		<table class="table table-bordered table-stripped">
 			<thead>
 				<tr>
@@ -27,6 +33,7 @@
 					<th>Firstname</th>
 					<th>Lastname</th>
 					<th>Email</th>
+					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -48,6 +55,9 @@
 						<td>${student.firstName}</td>
 						<td>${student.lastName}</td>
 						<td>${student.email}</td>
+						<td><a
+							href="StudentController?command=update&id=${student.id}"
+							class="fa fa-edit"></a></td>
 					</tr>
 				</c:forEach>
 			</tbody>
